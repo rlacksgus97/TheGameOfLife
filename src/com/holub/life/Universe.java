@@ -5,6 +5,7 @@ import java.io.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import com.holub.io.Files;
 import com.holub.ui.MenuSite;
@@ -29,6 +30,8 @@ import com.holub.life.Resident;
 public class Universe extends JPanel
 {	private 		final Cell  	outermostCell;
 	private static	final Universe 	theInstance = new Universe();
+	private ArrayList<Storable> state = new ArrayList<>();
+	private int pointer = -1;
 
 	/** The default height and width of a Neighborhood in cells.
 	 *  If it's too big, you'll run too slowly because
@@ -98,6 +101,13 @@ public class Universe extends JPanel
 					bounds.x = 0;
 					bounds.y = 0;
 					outermostCell.userClicked(e.getPoint(),bounds);
+
+					state.clear();
+
+					Storable memento = outermostCell.createMemento();
+					outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+					state.add(memento);
+
 					repaint();
 				}
 			}
@@ -107,6 +117,7 @@ public class Universe extends JPanel
 			new ActionListener()
 			{	public void actionPerformed(ActionEvent e)
 				{	outermostCell.clear();
+					state.clear();
 					repaint();
 				}
 			}
@@ -151,6 +162,10 @@ public class Universe extends JPanel
 							refreshNow();
 					}
 				}
+
+				public void back() {
+					backNow();
+				}
 			}
 		);
 	}
@@ -171,10 +186,13 @@ public class Universe extends JPanel
 
 			Clock.instance().stop();		// stop the game and
 			outermostCell.clear();			// clear the board.
+			state.clear();
 
 			Storable memento = outermostCell.createMemento();
 			memento.load( in );
 			outermostCell.transfer( memento, new Point(0,0), Cell.LOAD );
+
+			state.add(memento);
 
 			in.close();
 		}
@@ -244,7 +262,24 @@ public class Universe extends JPanel
 						Rectangle panelBounds = getBounds();
 						panelBounds.x = 0;
 						panelBounds.y = 0;
-						outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+
+						if(pointer==state.size()-2){ // 다음 상태가 state에 없는 경우
+							Storable memento = outermostCell.createMemento();
+							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+							state.add(memento);
+
+							pointer++;
+
+							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+						} else if(pointer<state.size()-2) { // 다음 상태가 이미 state에 있는 경우
+							Storable memento = state.get(pointer + 2);
+							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+
+							pointer++;
+
+							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+						}
+
 					}
 					finally
 					{	g.dispose();
@@ -252,5 +287,38 @@ public class Universe extends JPanel
 				}
 			}
 		);
+	}
+
+	private void backNow() {
+		SwingUtilities.invokeLater
+				(	new Runnable()
+					 {	public void run()
+					 {	Graphics g = getGraphics();
+						 if( g == null )		// Universe not displayable
+							 return;
+						 if( pointer == -1) {
+							 System.out.println("Index out of bound!");
+							 return;
+						 }
+
+						 try
+						 {
+							 Rectangle panelBounds = getBounds();
+							 panelBounds.x = 0;
+							 panelBounds.y = 0;
+
+							 Storable memento = state.get(pointer);
+							 outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+
+							 pointer--;
+
+							 outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+						 }
+						 finally
+						 {	g.dispose();
+						 }
+					 }
+					 }
+				);
 	}
 }
