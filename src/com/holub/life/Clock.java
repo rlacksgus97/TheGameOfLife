@@ -126,23 +126,6 @@ public class Clock
 			}
 		};
 
-		ActionListener modifier =									//{=startSetup}
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{
-					String name = ((JMenuItem)e.getSource()).getName();
-					char toDo = name.charAt(0);
-
-					if( toDo=='T' )
-						tick();				      // single tick
-					else
-						startTicking(   toDo=='A' ? 500:	  // agonizing
-										toDo=='S' ? 150:	  // slow
-										toDo=='M' ? 70 :	  // medium
-										toDo=='F' ? 30 : 0 ); // fast
-				}
-			};
-																	// {=midSetup}
 		MenuSite.addLine(this,"Go","Halt",  			halt);
 		MenuSite.addLine(this,"Go","Tick (Single Step)",tick);
 		MenuSite.addLine(this,"Go","Agonizing",	 	  	agonizing);
