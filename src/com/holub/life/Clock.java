@@ -84,6 +84,47 @@ public class Clock
 	{
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
+		CommandActionListener halt = new CommandActionListener() {
+			@Override
+			public void execute() {
+				startTicking(0);
+			}
+		};
+
+		CommandActionListener tick = new CommandActionListener() {
+			@Override
+			public void execute() {
+				tick();
+			}
+		};
+
+		CommandActionListener agonizing = new CommandActionListener() {
+			@Override
+			public void execute() {
+				startTicking(500);
+			}
+		};
+
+		CommandActionListener slow = new CommandActionListener() {
+			@Override
+			public void execute() {
+				startTicking(150);
+			}
+		};
+
+		CommandActionListener medium = new CommandActionListener() {
+			@Override
+			public void execute() {
+				startTicking(70);
+			}
+		};
+
+		CommandActionListener fast = new CommandActionListener() {
+			@Override
+			public void execute() {
+				startTicking(30);
+			}
+		};
 
 		ActionListener modifier =									//{=startSetup}
 			new ActionListener()
