@@ -94,6 +94,8 @@ public class Clock
 
 					if( toDo=='T' )
 						tick();				      // single tick
+					else if( toDo=='B')
+						back();
 					else
 						startTicking(   toDo=='A' ? 500:	  // agonizing
 										toDo=='S' ? 150:	  // slow
@@ -108,6 +110,7 @@ public class Clock
 		MenuSite.addLine(this,"Go","Slow",		 		modifier);
 		MenuSite.addLine(this,"Go","Medium",	 	 	modifier);
 		MenuSite.addLine(this,"Go","Fast",				modifier); // {=endSetup}
+		MenuSite.addLine(this,"Go","Back",				modifier); // 한 칸 뒤로가기 기능
 	}	//{=endCreateMenus}
 
 	private Publisher publisher = new Publisher();
@@ -132,6 +135,7 @@ public class Clock
 	 */
 	public interface Listener
 	{	void tick();
+		void back();
 	}
 
 	/** Force the clock to "tick," even if it's not time for
@@ -147,6 +151,17 @@ public class Clock
 				}
 			}
 		);
+	}
+
+	public void back()
+	{	publisher.publish
+			(	new Publisher.Distributor()
+				 {	public void deliverTo( Object subscriber )
+				 {	if( !menuIsActive() )
+					 ((Listener)subscriber).back();
+				 }
+				 }
+			);
 	}
 
 	/** Check if any item on the menu bar has been selected.
