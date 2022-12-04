@@ -3,6 +3,7 @@ package com.holub.life;
 import java.io.*;
 
 import java.awt.*;
+import javax.lang.model.util.Elements;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class Universe extends JPanel
 	private static	final Universe 	theInstance = new Universe();
 	private ArrayList<Storable> state = new ArrayList<>();
 	private int pointer = -1;
+
+	private BehaviorInterface behaviorInterface;
 
 	/** The default height and width of a Neighborhood in cells.
 	 *  If it's too big, you'll run too slowly because
@@ -264,18 +267,38 @@ public class Universe extends JPanel
 						panelBounds.y = 0;
 
 						if(pointer==state.size()-2){ // 다음 상태가 state에 없는 경우
-							Storable memento = outermostCell.createMemento();
-							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
-							state.add(memento);
+							// Strategy 패턴 적용 전
+//							Storable memento = outermostCell.createMemento();
+//							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+//							state.add(memento);
+//
+//							pointer++;
+
+							// Strategy 패턴 적용 후
+							behaviorInterface = OriginalBehavior.getInstance();
+							behaviorInterface.behavior(outermostCell, state, pointer);
 
 							pointer++;
+
+							System.out.println("pointer = " + pointer);
+							System.out.println("state.size() = " + state.size());
 
 							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
 						} else if(pointer<state.size()-2) { // 다음 상태가 이미 state에 있는 경우
-							Storable memento = state.get(pointer + 2);
-							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+							// Strategy 패턴 적용 전
+//							Storable memento = state.get(pointer + 2);
+//							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+//
+//							pointer++;
+
+							// Strategy 패턴 적용 후
+							behaviorInterface = AnotherBehavior.getInstance();
+							behaviorInterface.behavior(outermostCell, state, pointer);
 
 							pointer++;
+
+							System.out.println("pointer = " + pointer);
+							System.out.println("state.size() = " + state.size());
 
 							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
 						}
@@ -307,8 +330,18 @@ public class Universe extends JPanel
 							 panelBounds.x = 0;
 							 panelBounds.y = 0;
 
-							 Storable memento = state.get(pointer);
-							 outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+							 // Strategy 패턴 적용 전
+//							 Storable memento = state.get(pointer);
+//							 outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+//
+//							 pointer--;
+
+							// Strategy 패턴 적용 후
+							behaviorInterface = BackBehavior.getInstance();
+							behaviorInterface.behavior(outermostCell, state, pointer);
+
+							System.out.println("pointer = " + pointer);
+							System.out.println("state.size() = " + state.size());
 
 							 pointer--;
 
