@@ -82,48 +82,28 @@ public class Clock
 	 */
 	private void createMenus()
 	{
-		// First set up a single listener that will handle all the
-		// menu-selection events except "Exit"
-		CommandActionListener halt = new CommandActionListener() {
-			@Override
-			public void execute() {
-				startTicking(0);
-			}
+		Command haltCommand = () -> {
+			startTicking(0);
 		};
 
-		CommandActionListener tick = new CommandActionListener() {
-			@Override
-			public void execute() {
-				tick();
-			}
+		Command tickCommand = () -> {
+			tick();
 		};
 
-		CommandActionListener agonizing = new CommandActionListener() {
-			@Override
-			public void execute() {
-				startTicking(500);
-			}
+		Command agonizingCommand = () -> {
+			startTicking(500);
 		};
 
-		CommandActionListener slow = new CommandActionListener() {
-			@Override
-			public void execute() {
-				startTicking(150);
-			}
+		Command slowCommand = () -> {
+			startTicking(150);
 		};
 
-		CommandActionListener medium = new CommandActionListener() {
-			@Override
-			public void execute() {
-				startTicking(70);
-			}
+		Command mediumCommand = () -> {
+			startTicking(70);
 		};
 
-		CommandActionListener fast = new CommandActionListener() {
-			@Override
-			public void execute() {
-				startTicking(30);
-			}
+		Command fastCommand = () -> {
+			startTicking(30);
 		};
 
 		MenuSite.addLine(this,"Go","Halt",  			halt);
