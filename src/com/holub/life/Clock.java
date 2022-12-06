@@ -106,12 +106,23 @@ public class Clock
 			startTicking(30);
 		};
 
-		MenuSite.addLine(this,"Go","Halt",  			halt);
-		MenuSite.addLine(this,"Go","Tick (Single Step)",tick);
-		MenuSite.addLine(this,"Go","Agonizing",	 	  	agonizing);
-		MenuSite.addLine(this,"Go","Slow",		 		slow);
-		MenuSite.addLine(this,"Go","Medium",	 	 	medium);
-		MenuSite.addLine(this,"Go","Fast",				fast); // {=endSetup}
+		// First set up a single listener that will handle all the
+		// menu-selection events except "Exit"
+
+		CommandActionListener haltCommandActionListener = new CommandActionListener(haltCommand);
+		CommandActionListener tickCommandActionListener = new CommandActionListener(tickCommand);
+		CommandActionListener agonizingCommandActionListener = new CommandActionListener(agonizingCommand);
+		CommandActionListener slowCommandActionListener = new CommandActionListener(slowCommand);
+		CommandActionListener mediumCommandActionListener = new CommandActionListener(mediumCommand);
+		CommandActionListener fastCommandActionListener = new CommandActionListener(fastCommand);
+
+
+		MenuSite.addLine(this,"Go","Halt",  			haltCommandActionListener);
+		MenuSite.addLine(this,"Go","Tick (Single Step)",tickCommandActionListener);
+		MenuSite.addLine(this,"Go","Agonizing",	 	  	agonizingCommandActionListener);
+		MenuSite.addLine(this,"Go","Slow",		 		slowCommandActionListener);
+		MenuSite.addLine(this,"Go","Medium",	 	 	mediumCommandActionListener);
+		MenuSite.addLine(this,"Go","Fast",				fastCommandActionListener); // {=endSetup}
 		MenuSite.addLine(this,"Go","Back",				modifier); // 한 칸 뒤로가기 기능
 	}	//{=endCreateMenus}
 
