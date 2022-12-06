@@ -135,8 +135,6 @@ public class Clock
 
 					if( toDo=='T' )
 						tick();				      // single tick
-					else if( toDo=='B')
-						back();
 					else
 						startTicking(   toDo=='A' ? 500:	  // agonizing
 										toDo=='S' ? 150:	  // slow
@@ -145,12 +143,12 @@ public class Clock
 				}
 			};
 																	// {=midSetup}
-		MenuSite.addLine(this,"Go","Halt",  			modifier);
-		MenuSite.addLine(this,"Go","Tick (Single Step)",modifier);
-		MenuSite.addLine(this,"Go","Agonizing",	 	  	modifier);
-		MenuSite.addLine(this,"Go","Slow",		 		modifier);
-		MenuSite.addLine(this,"Go","Medium",	 	 	modifier);
-		MenuSite.addLine(this,"Go","Fast",				modifier); // {=endSetup}
+		MenuSite.addLine(this,"Go","Halt",  			halt);
+		MenuSite.addLine(this,"Go","Tick (Single Step)",tick);
+		MenuSite.addLine(this,"Go","Agonizing",	 	  	agonizing);
+		MenuSite.addLine(this,"Go","Slow",		 		slow);
+		MenuSite.addLine(this,"Go","Medium",	 	 	medium);
+		MenuSite.addLine(this,"Go","Fast",				fast); // {=endSetup}
 		MenuSite.addLine(this,"Go","Back",				modifier); // 한 칸 뒤로가기 기능
 	}	//{=endCreateMenus}
 
