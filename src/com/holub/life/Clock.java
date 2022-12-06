@@ -102,8 +102,12 @@ public class Clock
 			startTicking(70);
 		};
 
-		Command fastCommand = () -> {
+		Command fastCommand = () -> { 
 			startTicking(30);
+		};
+		
+		Command backCommand = () -> {
+			back();
 		};
 
 		// First set up a single listener that will handle all the
@@ -115,6 +119,7 @@ public class Clock
 		CommandActionListener slowCommandActionListener = new CommandActionListener(slowCommand);
 		CommandActionListener mediumCommandActionListener = new CommandActionListener(mediumCommand);
 		CommandActionListener fastCommandActionListener = new CommandActionListener(fastCommand);
+		CommandActionListener backCommandActionListener = new CommandActionListener(backCommand);
 
 
 		MenuSite.addLine(this,"Go","Halt",  			haltCommandActionListener);
@@ -123,7 +128,7 @@ public class Clock
 		MenuSite.addLine(this,"Go","Slow",		 		slowCommandActionListener);
 		MenuSite.addLine(this,"Go","Medium",	 	 	mediumCommandActionListener);
 		MenuSite.addLine(this,"Go","Fast",				fastCommandActionListener); // {=endSetup}
-		MenuSite.addLine(this,"Go","Back",				modifier); // 한 칸 뒤로가기 기능
+		MenuSite.addLine(this,"Go","Back",				backCommandActionListener); // 한 칸 뒤로가기 기능
 	}	//{=endCreateMenus}
 
 	private Publisher publisher = new Publisher();
