@@ -82,35 +82,53 @@ public class Clock
 	 */
 	private void createMenus()
 	{
+		Command haltCommand = () -> {
+			startTicking(0);
+		};
+
+		Command tickCommand = () -> {
+			tick();
+		};
+
+		Command agonizingCommand = () -> {
+			startTicking(500);
+		};
+
+		Command slowCommand = () -> {
+			startTicking(150);
+		};
+
+		Command mediumCommand = () -> {
+			startTicking(70);
+		};
+
+		Command fastCommand = () -> { 
+			startTicking(30);
+		};
+		
+		Command backCommand = () -> {
+			back();
+		};
+
 		// First set up a single listener that will handle all the
 		// menu-selection events except "Exit"
 
-		ActionListener modifier =									//{=startSetup}
-			new ActionListener()
-			{	public void actionPerformed(ActionEvent e)
-				{
-					String name = ((JMenuItem)e.getSource()).getName();
-					char toDo = name.charAt(0);
+		CommandActionListener haltCommandActionListener = new CommandActionListener(haltCommand);
+		CommandActionListener tickCommandActionListener = new CommandActionListener(tickCommand);
+		CommandActionListener agonizingCommandActionListener = new CommandActionListener(agonizingCommand);
+		CommandActionListener slowCommandActionListener = new CommandActionListener(slowCommand);
+		CommandActionListener mediumCommandActionListener = new CommandActionListener(mediumCommand);
+		CommandActionListener fastCommandActionListener = new CommandActionListener(fastCommand);
+		CommandActionListener backCommandActionListener = new CommandActionListener(backCommand);
 
-					if( toDo=='T' )
-						tick();				      // single tick
-					else if( toDo=='B')
-						back();
-					else
-						startTicking(   toDo=='A' ? 500:	  // agonizing
-										toDo=='S' ? 150:	  // slow
-										toDo=='M' ? 70 :	  // medium
-										toDo=='F' ? 30 : 0 ); // fast
-				}
-			};
-																	// {=midSetup}
-		MenuSite.addLine(this,"Go","Halt",  			modifier);
-		MenuSite.addLine(this,"Go","Tick (Single Step)",modifier);
-		MenuSite.addLine(this,"Go","Agonizing",	 	  	modifier);
-		MenuSite.addLine(this,"Go","Slow",		 		modifier);
-		MenuSite.addLine(this,"Go","Medium",	 	 	modifier);
-		MenuSite.addLine(this,"Go","Fast",				modifier); // {=endSetup}
-		MenuSite.addLine(this,"Go","Back",				modifier); // 한 칸 뒤로가기 기능
+
+		MenuSite.addLine(this,"Go","Halt",  			haltCommandActionListener);
+		MenuSite.addLine(this,"Go","Tick (Single Step)",tickCommandActionListener);
+		MenuSite.addLine(this,"Go","Agonizing",	 	  	agonizingCommandActionListener);
+		MenuSite.addLine(this,"Go","Slow",		 		slowCommandActionListener);
+		MenuSite.addLine(this,"Go","Medium",	 	 	mediumCommandActionListener);
+		MenuSite.addLine(this,"Go","Fast",				fastCommandActionListener); // {=endSetup}
+		MenuSite.addLine(this,"Go","Back",				backCommandActionListener); // 한 칸 뒤로가기 기능
 	}	//{=endCreateMenus}
 
 	private Publisher publisher = new Publisher();
