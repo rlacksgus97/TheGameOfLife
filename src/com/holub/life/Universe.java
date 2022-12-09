@@ -267,40 +267,19 @@ public class Universe extends JPanel
 						panelBounds.y = 0;
 
 						if(pointer==state.size()-2){ // 다음 상태가 state에 없는 경우
-							// Strategy 패턴 적용 전
-//							Storable memento = outermostCell.createMemento();
-//							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
-//							state.add(memento);
-//
-//							pointer++;
-
-							// Strategy 패턴 적용 후
 							behaviorInterface = OriginalBehavior.getInstance();
 							behaviorInterface.behavior(outermostCell, state, pointer);
 
 							pointer++;
 
-							System.out.println("pointer = " + pointer);
-							System.out.println("state.size() = " + state.size());
-
-							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+							outermostCell.redraw(g, panelBounds, false);
 						} else if(pointer<state.size()-2) { // 다음 상태가 이미 state에 있는 경우
-							// Strategy 패턴 적용 전
-//							Storable memento = state.get(pointer + 2);
-//							outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
-//
-//							pointer++;
-
-							// Strategy 패턴 적용 후
 							behaviorInterface = AnotherBehavior.getInstance();
 							behaviorInterface.behavior(outermostCell, state, pointer);
 
 							pointer++;
 
-							System.out.println("pointer = " + pointer);
-							System.out.println("state.size() = " + state.size());
-
-							outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+							outermostCell.redraw(g, panelBounds, false);
 						}
 
 					}
@@ -326,26 +305,17 @@ public class Universe extends JPanel
 
 						 try
 						 {
-							 Rectangle panelBounds = getBounds();
-							 panelBounds.x = 0;
-							 panelBounds.y = 0;
-
-							 // Strategy 패턴 적용 전
-//							 Storable memento = state.get(pointer);
-//							 outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
-//
-//							 pointer--;
+							Rectangle panelBounds = getBounds();
+							panelBounds.x = 0;
+							panelBounds.y = 0;
 
 							// Strategy 패턴 적용 후
 							behaviorInterface = BackBehavior.getInstance();
 							behaviorInterface.behavior(outermostCell, state, pointer);
 
-							System.out.println("pointer = " + pointer);
-							System.out.println("state.size() = " + state.size());
+							pointer--;
 
-							 pointer--;
-
-							 outermostCell.redraw(g, panelBounds, false); //{=Universe.redraw2}
+							outermostCell.redraw(g, panelBounds, false);
 						 }
 						 finally
 						 {	g.dispose();
