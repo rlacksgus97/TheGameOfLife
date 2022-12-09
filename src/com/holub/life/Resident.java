@@ -23,10 +23,19 @@ public final class Resident implements Cell
 	private static final Color LIVE_COLOR 	= Color.RED;
 	private static final Color DEAD_COLOR   = Colors.LIGHT_YELLOW;
 
+	public void setAmAlive(boolean amAlive) {
+		this.amAlive = amAlive;
+	}
+
 	private boolean amAlive 	= false;
 	private boolean willBeAlive	= false;
 
 	private boolean isStable(){return amAlive == willBeAlive; }
+
+	@Override
+	public Cell[][] getGrid() {
+		return null;
+	}
 
 	/** figure the next state.
 	 *  @return true if the cell is not stable (will change state on the

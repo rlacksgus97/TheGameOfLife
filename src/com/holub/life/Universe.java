@@ -29,8 +29,18 @@ import com.holub.life.Resident;
  */
 
 public class Universe extends JPanel
-{	private 		final Cell  	outermostCell;
-	private static	final Universe 	theInstance = new Universe();
+{
+	public Cell getOutermostCell() {
+		return outermostCell;
+	}
+
+	private 		final Cell  	outermostCell;
+//	private static	final Universe 	theInstance = new Universe(0);
+
+	public ArrayList<Storable> getState() {
+		return state;
+	}
+
 	private ArrayList<Storable> state = new ArrayList<>();
 	private int pointer = -1;
 
@@ -53,7 +63,67 @@ public class Universe extends JPanel
 	// The constructor is private so that the universe can be created
 	// only by an outer-class method [Neighborhood.createUniverse()].
 
-	private Universe()
+	public Universe(int x) {
+		outermostCell = new Neighborhood
+				(	DEFAULT_GRID_SIZE,
+						new Neighborhood
+								(	DEFAULT_GRID_SIZE,
+										new Resident()
+								)
+				);
+
+		final Dimension PREFERRED_SIZE =
+				new Dimension
+						(  outermostCell.widthInCells() * DEFAULT_CELL_SIZE,
+								outermostCell.widthInCells() * DEFAULT_CELL_SIZE
+						);
+
+		addComponentListener
+				(	new ComponentAdapter()
+					 {	public void componentResized(ComponentEvent e)
+					 {
+						 // Make sure that the cells fit evenly into the
+						 // total grid size so that each cell will be the
+						 // same size. For example, in a 64x64 grid, the
+						 // total size must be an even multiple of 63.
+
+						 Rectangle bounds = getBounds();
+						 bounds.height /= outermostCell.widthInCells();
+						 bounds.height *= outermostCell.widthInCells();
+						 bounds.width  =  bounds.height;
+						 setBounds( bounds );
+					 }
+					 }
+				);
+
+		setBackground	( Color.white	 );
+		setPreferredSize( PREFERRED_SIZE );
+		setMaximumSize	( PREFERRED_SIZE );
+		setMinimumSize	( PREFERRED_SIZE );
+		setOpaque		( true			 );
+
+		addMouseListener					//{=Universe.mouse}
+				(	new MouseAdapter()
+					 {	public void mousePressed(MouseEvent e)
+					 {	Rectangle bounds = getBounds();
+						 bounds.x = 0;
+						 bounds.y = 0;
+						 outermostCell.userClicked(e.getPoint(),bounds);
+
+						 state.clear();
+
+						 Storable memento = outermostCell.createMemento();
+						 outermostCell.transfer(memento, new Point(0, 0), Cell.LOAD);
+						 state.add(memento);
+
+						 repaint();
+					 }
+					 }
+				);
+
+	}
+
+	public Universe()
 	{	// Create the nested Cells that comprise the "universe." A bug
 		// in the current implementation causes the program to fail
 		// miserably if the overall size of the grid is too big to fit
@@ -177,9 +247,9 @@ public class Universe extends JPanel
 	 *  in Neighborhood.createUniverse()
 	 */
 
-	public static Universe instance()
-	{	return theInstance;
-	}
+//	public static Universe instance()
+//	{	return theInstance;
+//	}
 
 	private void doLoad()
 	{	try
@@ -353,5 +423,40 @@ public class Universe extends JPanel
 					 }
 					 }
 				);
+	}
+
+	public void refreshNowTest()
+	{
+		 Rectangle panelBounds = getBounds();
+		 panelBounds.x = 0;
+		 panelBounds.y = 0;
+
+		 if(pointer==state.size()-2){
+			 behaviorInterface = OriginalBehavior.getInstance();
+			 behaviorInterface.behavior(outermostCell, state, pointer);
+
+			 pointer++;
+		 } else if(pointer<state.size()-2) {
+			 behaviorInterface = AnotherBehavior.getInstance();
+			 behaviorInterface.behavior(outermostCell, state, pointer);
+
+			 pointer++;
+		 }
+
+	}
+
+	public void backNowTest() {
+		 if( pointer == -1) {
+			 return;
+		 }
+
+		 Rectangle panelBounds = getBounds();
+		 panelBounds.x = 0;
+		 panelBounds.y = 0;
+
+		 behaviorInterface = BackBehavior.getInstance();
+		 behaviorInterface.behavior(outermostCell, state, pointer);
+
+		 pointer--;
 	}
 }
