@@ -14,6 +14,8 @@ import com.holub.life.Storable;
 
 public interface Cell
 {
+	Cell[][] getGrid();
+
 	/** Figure out the next state of the cell, given the specified
 	 *  neighbors.
 	 *  @return true if the cell is unstable (changed state).
@@ -147,6 +149,10 @@ public interface Cell
 		public void 	 clear()		   	{						  }
 		public int 		 widthInCells()  	{return 0;				  }
 		public boolean	 transition()		{return false;			  }
+
+		public Cell[][] getGrid() {
+			return null;
+		}
 
 		public void	userClicked(Point h, Rectangle s				){}
 		public void redraw 		(Graphics g, Rectangle here,

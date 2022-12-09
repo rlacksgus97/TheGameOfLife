@@ -49,6 +49,10 @@ public final class Neighborhood implements Cell
 
 	private boolean amActive = false;
 
+	public Cell[][] getGrid() {
+		return grid;
+	}
+
 	/** The actual grid of Cells contained within this neighborhood. */
 	private final Cell[][] grid;
 
@@ -478,7 +482,7 @@ public final class Neighborhood implements Cell
 	 * rewrite load() and flush() to use XML.
 	 */
 
-	private static class NeighborhoodState implements Cell.Memento
+	public static class NeighborhoodState implements Cell.Memento
 	{	Collection liveCells = new LinkedList();
 
 		public NeighborhoodState( InputStream in ) throws IOException
